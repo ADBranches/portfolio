@@ -1,0 +1,125 @@
+/* Thank You Page Styles */
+.thank-you-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    padding: 2rem;
+    background-color: #f8f9fa;
+}
+
+.thank-you-card {
+    max-width: 600px;
+    width: 100%;
+    padding: 3rem 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    border-top: 5px solid #4285F4;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.checkmark {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+}
+
+.checkmark-circle {
+    stroke: #4285F4;
+    stroke-width: 2;
+    stroke-dasharray: 166;
+    stroke-dashoffset: 166;
+    animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+.checkmark-check {
+    transform-origin: 50% 50%;
+    stroke: #4285F4;
+    stroke-width: 2;
+    stroke-dasharray: 48;
+    stroke-dashoffset: 48;
+    animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.6s forwards;
+}
+
+.thank-you-card h1 {
+    font-size: 2.2rem;
+    color: #222;
+    margin-bottom: 1.5rem;
+}
+
+.confirmation-message {
+    font-size: 1.1rem;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+.next-steps {
+    text-align: left;
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin: 2rem 0;
+}
+
+.next-steps h2 {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.next-steps ul {
+    padding-left: 1.2rem;
+}
+
+.next-steps li {
+    margin-bottom: 0.5rem;
+    color: #555;
+}
+
+.return-btn {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    background-color: #4285F4;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.return-btn:hover {
+    background-color: #174EA6;
+    transform: translateY(-2px);
+}
+
+/* Animations */
+@keyframes stroke {
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .thank-you-card {
+        padding: 2rem 1.5rem;
+    }
+    
+    .thank-you-card h1 {
+        font-size: 1.8rem;
+    }
+}

@@ -1,66 +1,25 @@
-// Enhanced Contact Form Logic
-if (contactForm) {
-    // Dynamic field handling
-    contactType.addEventListener('change', (e) => {
-        datetimeGroup.classList.toggle('hidden', e.target.value !== 'call');
-        document.getElementById('urgency-group').style.display = 
-            ['web-dev', 'security'].includes(e.target.value) ? 'block' : 'none';
-    });
+// Set current year and last modified date
+document.getElementById('currentyear').textContent = new Date().getFullYear();
+document.getElementById('lastModified').textContent = `Last Modified: ${document.lastModified}`;
 
-    // Character counter
-    const textarea = messageGroup.querySelector('textarea');
-    const charCounter = messageGroup.querySelector('.char-counter');
-    textarea.addEventListener('input', () => {
-        document.getElementById('char-count').textContent = textarea.value.length;
-    });
+// Toast notification system
+const toastQueue = [];
+let isToastShowing = false;
 
-    // Form submission
-    contactForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const submitBtn = contactForm.querySelector('.submit-btn');
-        const btnText = submitBtn.querySelector('.btn-text');
-        const spinner = submitBtn.querySelector('.loading-spinner');
-        
-        // UI Feedback
-        btnText.classList.add('hidden');
-        spinner.classList.remove('hidden');
-        submitBtn.disabled = true;
-
-        try {
-            const response = await fetch(contactForm.action, {
-                method: 'POST',
-                body: new FormData(contactForm),
-                headers: { 'Accept': 'application/json' }
-            });
-            
-            if (response.ok) {
-                showToast('Message sent successfully!', 'success');
-                contactForm.reset();
-                document.getElementById('char-count').textContent = '0';
-            } else {
-                throw new Error(await response.text());
-            }
-        } catch (error) {
-            console.error('Submission error:', error);
-            showToast('Failed to send. Please try again or contact via LinkedIn.', 'error');
-        } finally {
-            btnText.classList.remove('hidden');
-            spinner.classList.add('hidden');
-            submitBtn.disabled = false;
-        }
-    });
-
-    // Input validation
-    contactForm.querySelectorAll('[required]').forEach(input => {
-        input.addEventListener('blur', () => {
-            input.parentElement.classList.toggle('error', !input.checkValidity());
-            input.parentElement.classList.toggle('success', input.checkValidity());
-        });
-    });
+function showToast(message, type = 'success') {
+    toastQueue.push({ message, type });
+    if (!isToastShowing) processToastQueue();
 }
 
-// Enhanced Toast
-function showToast(message, type = 'success') {
+function processToastQueue() {
+    if (toastQueue.length === 0) {
+        isToastShowing = false;
+        return;
+    }
+
+    isToastShowing = true;
+    const { message, type } = toastQueue.shift();
+    
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
     toast.innerHTML = `
@@ -70,8 +29,113 @@ function showToast(message, type = 'success') {
     document.body.appendChild(toast);
     
     setTimeout(() => toast.classList.add('show'), 50);
+    
     setTimeout(() => {
         toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 300);
+        setTimeout(() => {
+            toast.remove();
+            processToastQueue();
+        }, 300);
     }, 5000);
 }
+
+// Check for success redirect
+if (window.location.search.includes('formsuccess=true')) {
+    showToast('Message sent successfully!', 'success');
+    // Clean URL without reload
+    history.replaceState(null, '', window.location.pathname);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Projects link toast
+    document.querySelectorAll('.projects-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            showToast('Projects section coming soon!', 'info');
+        });
+    });
+
+    // Enhanced Contact Form Logic
+    const contactForm = document.getElementById('contact-form');
+    if (contactForm) {
+        const contactType = document.getElementById('contact-type');
+        const datetimeGroup = document.getElementById('datetime-group');
+        const urgencyGroup = document.getElementById('urgency-group');
+
+        // Dynamic field handling
+        contactType.addEventListener('change', (e) => {
+            const isCall = e.target.value === 'call';
+            datetimeGroup.classList.toggle('hidden', !isCall);
+            urgencyGroup.style.display = 
+                ['web-dev', 'security'].includes(e.target.value) ? 'block' : 'none';
+        });
+
+        // Character counter
+        const textarea = document.getElementById('message');
+        if (textarea) {
+            textarea.addEventListener('input', () => {
+                const counter = document.getElementById('char-count');
+                if (counter) counter.textContent = textarea.value.length;
+            });
+        }
+
+        // Form submission
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const submitBtn = contactForm.querySelector('.submit-btn');
+            const btnText = submitBtn.querySelector('.btn-text');
+            const spinner = submitBtn.querySelector('.loading-spinner');
+            
+            // UI Feedback
+            btnText.classList.add('hidden');
+            spinner.classList.remove('hidden');
+            submitBtn.disabled = true;
+
+            try {
+                const formData = {
+                    name: contactForm.querySelector('#name').value,
+                    email: contactForm.querySelector('#email').value,
+                    contactType: contactForm.querySelector('#contact-type').value,
+                    message: contactForm.querySelector('#message').value,
+                    datetime: contactForm.querySelector('#datetime')?.value
+                };
+
+                // Send to both Formspree and our email handler
+                const [formspreeResponse, emailResponse] = await Promise.all([
+                    fetch(contactForm.action, {
+                        method: 'POST',
+                        body: new FormData(contactForm),
+                        headers: { 'Accept': 'application/json' }
+                    }),
+                    fetch('/.netlify/functions/email-handler', {
+                        method: 'POST',
+                        body: JSON.stringify(formData),
+                        headers: { 'Content-Type': 'application/json' }
+                    })
+                ]);
+                
+                if (!emailResponse.ok) throw new Error('Email failed');
+                if (!formspreeResponse.ok) throw new Error('Formspree failed');
+
+                window.location.href = 'thanks.html?formsuccess=true';
+            } catch (error) {
+                console.error('Submission error:', error);
+                showToast(error.message || 'Message received! You may get a delayed confirmation.', 'warning');
+            } finally {
+                btnText.classList.remove('hidden');
+                spinner.classList.add('hidden');
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Input validation
+        contactForm.querySelectorAll('[required]').forEach(input => {
+            input.addEventListener('blur', () => {
+                const isValid = input.checkValidity();
+                input.parentElement.classList.toggle('error', !isValid);
+                input.parentElement.classList.toggle('success', isValid);
+            });
+        });
+    }
+});

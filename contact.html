@@ -27,6 +27,9 @@
             <h1 class="fade-in">Contact Me</h1>
             <p class="fade-in">Reach out for a quick message or to schedule a call. I'm excited to connect and discuss your ideas!</p>
             <form id="contact-form" action="https://formspree.io/f/xpwlyljb" method="POST" class="fade-in">
+                <!-- CSRF protection (for Formspree) -->
+                <input type="hidden" name="_next" value="thanks.html">
+                <input type="hidden" name="_subject" value="New Portfolio Contact">
                 <!-- Honeypot Field -->
                 <input type="checkbox" name="_honeypot" style="display:none" tabindex="-1" autocomplete="off">
                 
@@ -90,6 +93,8 @@
                     By submitting, you agree to our <a href="/privacy" target="_blank">Privacy Policy</a>.
                     I'll respond within 24-48 hours.
                 </p>
+                <!-- Dynamic form submission feedback element -->
+                <div id="form-feedback" class="form-feedback hidden"></div>
             </form>
         </section>
     </main>

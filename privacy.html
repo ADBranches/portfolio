@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy | Edwin Kambale</title>
+    <meta name="description" content="Privacy policy for Edwin Kambale's portfolio website and contact form">
+    <meta name="author" content="Edwin Kambale">
+    <link rel="stylesheet" href="styles/styles.css">
+    <link rel="stylesheet" href="styles/privacy.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <span class="course-title">Edwin Kambale - Portfolio</span>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="https://www.linkedin.com/in/edwinkambale/" target="_blank">LinkedIn</a>
+                <a href="https://github.com/adbranches" target="_blank">GitHub</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="privacy-container">
+        <article class="privacy-policy card">
+            <h1>Privacy Policy</h1>
+            <p class="last-updated">Last Updated: <span id="current-date"></span></p>
+            
+            <section>
+                <h2>1. Information Collection</h2>
+                <p>When you use my contact form, I collect:</p>
+                <ul>
+                    <li>Your name</li>
+                    <li>Email address</li>
+                    <li>Contact type</li>
+                    <li>Message content</li>
+                    <li>Optional: Preferred call time (if scheduling a call)</li>
+                </ul>
+            </section>
+            
+            <section>
+                <h2>2. Use of Information</h2>
+                <p>This information is used solely to:</p>
+                <ul>
+                    <li>Respond to your inquiries</li>
+                    <li>Improve my services</li>
+                    <li>Prevent spam</li>
+                </ul>
+            </section>
+            
+            <section>
+                <h2>3. Data Storage</h2>
+                <p>Your information is processed through:</p>
+                <ul>
+                    <li>Formspree (form submission service)</li>
+                    <li>My professional Gmail account (for responses)</li>
+                </ul>
+                <p>Data is retained for 6 months unless you request deletion.</p>
+            </section>
+            
+            <section>
+                <h2>4. Third-Party Services</h2>
+                <p>This site uses:</p>
+                <ul>
+                    <li>Formspree for form handling (<a href="https://formspree.io/privacy" target="_blank">their privacy policy</a>)</li>
+                    <li>Google reCAPTCHA for spam protection (<a href="https://policies.google.com/privacy" target="_blank">Google's privacy policy</a>)</li>
+                </ul>
+            </section>
+            
+            <section>
+                <h2>5. Your Rights</h2>
+                <p>You can request to:</p>
+                <ul>
+                    <li>Access your personal data</li>
+                    <li>Correct inaccurate information</li>
+                    <li>Delete your data</li>
+                    <li>Withdraw consent</li>
+                </ul>
+                <p>To exercise these rights, contact me at <a href="mailto:edwinkambale33@gmail.com">edwinkambale33@gmail.com</a>.</p>
+            </section>
+            
+            <section>
+                <h2>6. Changes to This Policy</h2>
+                <p>I may update this policy periodically. The "Last Updated" date at the top will reflect changes.</p>
+            </section>
+        </article>
+    </main>
+
+    <footer>
+        <p>&copy;<span id="currentyear"></span> Edwin Kambale - Uganda</p>
+        <p id="lastModified"></p>
+    </footer>
+
+    <script>
+        // Set current date
+        document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-US', {
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric'
+        });
+        
+        // Set footer year
+        document.getElementById('currentyear').textContent = new Date().getFullYear();
+        document.getElementById('lastModified').textContent = `Last Modified: ${document.lastModified}`;
+    </script>
+</body>
+</html>
